@@ -1,4 +1,5 @@
 import os
+import time
 
 col1 = [" ", " ", " ", " ", " ", " "]
 col2 = [" ", " ", " ", " ", " ", " "]
@@ -12,7 +13,7 @@ blue = "\u001b[34m"
 white = "\u001b[37m"
 board = [col1, col2, col3, col4, col5, col6, col7]
 turn = 0
-player = 'nothing'
+player = ''
 winnerX = False
 winnerO = False
 
@@ -34,17 +35,13 @@ def print_board():
 def place():
     global board
     for i in range(0,6):
-        if " " in board[player_input]:
-            if board[player_input][i] == " ":
-                if turn % 2 == 0:
-                    board[player_input][i] = (red + "O" + white)
-                    break
-                elif turn % 2 != 0:
-                    board[player_input][i] = (blue + "O" + white)
-                    break
-        else:
-            print("you can't place something here, try again")
-            continue
+        if board[player_input][i] == " ":
+            if turn % 2 == 0:
+                board[player_input][i] = (red + "O" + white)
+                break
+            elif turn % 2 != 0:
+                board[player_input][i] = (blue + "O" + white)
+                break
 
 def IswinnerDiagUp():
     global board
@@ -102,8 +99,8 @@ def IswinnerCol():
     global board
     global winnerX
     global winnerO
-    for x in range(0,4):
-        for y in range(0,6):
+    for x in range(0,7):
+        for y in range(0,3):
             if board[x][y] == (red + "O" + white):
                 if board[x][y+1] == (red + "O" + white):
                     if board[x][y+2] == (red + "O" + white):
@@ -117,7 +114,7 @@ def IswinnerCol():
             else:
                 continue
 
-for t in range(0,42):
+while turn <= 42:
     if turn % 2 == 0:
         player = (red + "O" + white)
     else:
@@ -130,13 +127,29 @@ for t in range(0,42):
     IswinnerCol()
     IswinnerDiagUp()
     IswinnerDiagDown()
-    if winnerX == True:
-        print("Red won!")
-        print()
-    elif winnerO == True:
-        print("Blue won!")
-        print()
+    if turn == 42:
+        print("The Game is a draw")
     else:
-        player_input = int(input("Choose your column %s:" % player)) - 1
-        place()
-        turn = turn + 1
+        if winnerX == True:
+            print("Red won!")
+            break
+        elif winnerO == True:
+            print("Blue won!")
+            break
+        else:
+            try:
+                player_input = int(input("Choose your column %s:" % player)) - 1
+            except ValueError:
+                print("invalid input, please try again")
+                time.sleep(2)
+                continue
+        if player_input in range(0,7):
+                if " " in board[player_input]:
+                    place()
+                    turn += 1
+        else:
+            print("Invalid number, please try again")
+            time.sleep(2)
+            continue             
+
+print()
