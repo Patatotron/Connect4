@@ -13,6 +13,8 @@ white = "\u001b[37m"
 board = [col1, col2, col3, col4, col5, col6, col7]
 turn = 0
 player = 'nothing'
+winnerX = False
+winnerO = False
 
 def print_board():
     global board
@@ -44,15 +46,97 @@ def place():
             print("you can't place something here, try again")
             continue
 
+def IswinnerDiagUp():
+    global board
+    global winnerO
+    global winnerX
+    for x in range(0,4):
+        for y in range(0,3):
+            if board[x][y] == (red + "O" + white):
+                if board[x+1][y+1] == (red + "O" + white):
+                    if board[x+2][y+2] == (red + "O" + white):
+                        if board[x+3][y+3] == (red + "O" + white):
+                            winnerX = True
+            elif board[x][y] == (blue + "O" + white):
+                if board[x+1][y+1] == (blue + "O" + white):
+                    if board[x+2][y+2] == (blue + "O" + white):
+                        if board[x+3][y+3] == (blue + "O" + white):
+                            winnerO = True
+
+def IswinnerDiagDown():
+    global board
+    global winnerO
+    global winnerX
+    for x in range(0,4):
+        for y in range(3,6):
+            if board[x][y] == (red + "O" + white):
+                if board[x+1][y-1] == (red + "O" + white):
+                    if board[x+2][y-2] == (red + "O" + white):
+                        if board[x+3][y-3] == (red + "O" + white):
+                            winnerX = True
+            elif board[x][y] == (blue + "O" + white):
+                if board[x+1][y-1] == (blue + "O" + white):
+                    if board[x+2][y-2] == (blue + "O" + white):
+                        if board[x+3][y-3] == (blue + "O" + white):
+                            winnerO = True
+
+def IswinnerRow():
+    global board
+    global winnerX
+    global winnerO
+    for y in range(0,6):
+        for x in range(0,4):
+            if board[x][y] == (red + "O" + white):
+                if board[x+1][y] == (red + "O" + white):
+                    if board[x+2][y] == (red + "O" + white):
+                        if board[x+3][y] == (red + "O" + white):
+                            winnerX = True
+            elif board[x][y] == (blue + "O" + white):
+                if board[x+1][y] == (blue + "O" + white):
+                    if board[x+2][y] == (blue + "O" + white):
+                        if board[x+3][y] == (blue + "O" + white):
+                            winnerO = True
+                
+
+def IswinnerCol():
+    global board
+    global winnerX
+    global winnerO
+    for x in range(0,4):
+        for y in range(0,6):
+            if board[x][y] == (red + "O" + white):
+                if board[x][y+1] == (red + "O" + white):
+                    if board[x][y+2] == (red + "O" + white):
+                        if board[x][y+3] == (red + "O" + white):
+                            winnerX = True
+            elif board[x][y] == (blue + "O" + white):
+                if board[x][y+1] == (blue + "O" + white):
+                    if board[x][y+2] == (blue + "O" + white):
+                        if board[x][y+3] == (blue + "O" + white):
+                            winnerO = True
+            else:
+                continue
+
 for t in range(0,42):
     if turn % 2 == 0:
-        player = "X"
+        player = (red + "O" + white)
     else:
-        player = "O"
+        player = (blue + "O" + white)
 
     os.system('clear')
     print_board()
     print()
-    player_input = int(input("Choose your column %s:" % player)) - 1
-    place()
-    turn = turn + 1
+    IswinnerRow()
+    IswinnerCol()
+    IswinnerDiagUp()
+    IswinnerDiagDown()
+    if winnerX == True:
+        print("Red won!")
+        print()
+    elif winnerO == True:
+        print("Blue won!")
+        print()
+    else:
+        player_input = int(input("Choose your column %s:" % player)) - 1
+        place()
+        turn = turn + 1
